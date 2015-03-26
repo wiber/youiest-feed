@@ -9,6 +9,9 @@ Package.describe({
 
 Package.on_use(function (api) {
   api.versionsFrom('1.0.3.1');
+
+  api.export("Feed",['client','server']);
+  
   api.use([
     'templating',
     'deps',
@@ -36,6 +39,12 @@ Package.on_test(function (api) {
   // api.versionsFrom('1.0.3.1');
   api.use(
     [
+      'templating',
+      'deps',
+      'tracker',
+      'session',
+      'pedrohenriquerls:reactjs',
+
       'underscore',
       'ground:db',
       'aldeed:console-me',
@@ -50,21 +59,25 @@ Package.on_test(function (api) {
       'underscore', 
       'random', 
       'pedrohenriquerls:reactjs',
-      'mongo'
+      'mongo',
+      'youiest:unionize'
     ], 
     [
       'client', 
       'server'
     ]);
 
-  api.export(["W","WI","Unionize"], ['client','server']);
+  api.export("Feed",['client','server']);
 
   api.add_files([
     'lib.js'
   ], ['client','server']);
 
+
   api.add_files([
-    'client.js'
+    'templateFeed.html',
+    'templateFeed.jsx',
+    'client.js',
   ], ['client']);
 
   api.add_files([
