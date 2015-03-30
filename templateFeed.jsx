@@ -2,22 +2,23 @@
 userId = "nicolsondsouza";
 var feedList = new React.createClass({
 	getInitialState: function(){
-		var inbox = [];
-		var user = Meteor.users.findOne(userId);
-		if(user && user.inbox)
-			inbox = user.inbox
+		// var inbox = [];
+		// var user = Meteor.users.findOne(userId);
+		// if(user && user.inbox)
+		// 	inbox = user.inbox
 		return {
-			inbox: inbox
+			inbox: Session.get("inbox")
 		}
 	},
 	componentDidMount: function(){
 		var self = this;
 		Tracker.autorun(function(){
-			var inbox = [];
-			var user = Meteor.users.findOne(userId);
-			if(user && user.inbox)
-				inbox = user.inbox;
-			self.setState({inbox: inbox});
+			self.setState({inbox: Session.get("inbox")});
+			// var inbox = [];
+			// var user = Meteor.users.findOne(userId);
+			// if(user && user.inbox)
+			// 	inbox = user.inbox;
+			// self.setState({inbox: inbox});
 		});
 	},
 	onClickFeed: function(currentInbox){
@@ -59,20 +60,48 @@ Feed.feedList = feedList;
 
 var feed = new React.createClass({
 	"onClickFeed": function(){
+		var feedData = this.props.feedData;
 		// console.log(this.props.feedData)
-		Session.set("imageId",this.props.feedData._id);
+		// Session.set("imageId",this.props.feedData._id);
 		this.props.onClickFeed(this.props.feedData);
+		var user = Meteor.users.findOne({'_id': userId});
+		if(user && user.big && user.big.length == 1){
+			var big = user.big[0];
+			Meteor.users.update({'_id': userId},{
+				$push: {"seen": big}
+	    });
+		}
+		Meteor.users.update({'_id': userId},{
+			$pull: {"inbox": {"_id": feedData._id}},
+    	$set: {"big": []}
+    });
+    Meteor.users.update({'_id': userId},{
+    	$push: {"big": feedData}
+		});
+		// this.onMakeSeen(this.props.feedData);
 	},
 	"render": function(){
 		// console.log(this.props.feedData)
 		var className = "ui small images "+(this.props.feedData.active||"")
 		return( 
 			// <a href={"/image/" + this.props.feedData._id}> 
-				<img className={className} src={this.props.feedData.picture_low} onClick={this.onClickFeed}/>
+				<img className={className} src={this.props.feedData.image_low} onClick={this.onClickFeed}/>
 			// </a>
 		)
+	},
+	"onMakeSeen": function(feedData){
+		// Meteor.setTimeout(function(){
+			// console.log(feedData._id)
+			var find = {"_id": userId, "inbox._id": feedData._id};
+			var update = {$set: {"inbox.$.seen": true}};
+			// Meteor.call("updateUserElement",find, update);
+			// Meteor.users.update(,
+			// 	)
+			// Meteor.users.findOne({"_id": userId});
+		// },1000);
 	}
 });
+// db.foo.update({"array.value" : 22}, {"$set" : {"array.$.text" : "blah"}})
 Feed.feed = feed;
 
 Template.feedPackage.rendered = function(){

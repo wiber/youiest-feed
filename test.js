@@ -37,7 +37,7 @@ if(Meteor.isServer){
 }
 if(Meteor.isClient){
 	Tinytest.add("FeedList - Check if feedlist has DOM in data",function(test,next){
-		Session.set("imageId",DummyData._id);
+		// Session.set("imageId",DummyData._id);
 		// setTimeout(function(){
 		var DomElement = React.renderComponentToString(Feed.feedList(null))
 		// console.log(DomElement.match("DM4ZEp8")[0])
