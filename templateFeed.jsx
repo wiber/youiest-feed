@@ -3,7 +3,7 @@ userId = "nicolsondsouza";
 var feedList = new React.createClass({
 	getInitialState: function(){
 		// var inbox = [];
-		// var user = Meteor.users.findOne(userId);
+		// var user = WI.findOne(userId);
 		// if(user && user.inbox)
 		// 	inbox = user.inbox
 		return {
@@ -15,7 +15,7 @@ var feedList = new React.createClass({
 		Tracker.autorun(function(){
 			self.setState({inbox: Session.get("inbox")});
 			// var inbox = [];
-			// var user = Meteor.users.findOne(userId);
+			// var user = WI.findOne(userId);
 			// if(user && user.inbox)
 			// 	inbox = user.inbox;
 			// self.setState({inbox: inbox});
@@ -64,18 +64,18 @@ var feed = new React.createClass({
 		// console.log(this.props.feedData)
 		// Session.set("imageId",this.props.feedData._id);
 		this.props.onClickFeed(this.props.feedData);
-		var user = Meteor.users.findOne({'_id': userId});
+		var user = WI.findOne({'_id': userId});
 		if(user && user.big && user.big.length == 1){
 			var big = user.big[0];
-			Meteor.users.update({'_id': userId},{
+			WI.update({'_id': userId},{
 				$push: {"seen": big}
 	    });
 		}
-		Meteor.users.update({'_id': userId},{
+		WI.update({'_id': userId},{
 			$pull: {"inbox": {"_id": feedData._id}},
     	$set: {"big": []}
     });
-    Meteor.users.update({'_id': userId},{
+    WI.update({'_id': userId},{
     	$push: {"big": feedData}
 		});
 		// this.onMakeSeen(this.props.feedData);
@@ -95,9 +95,9 @@ var feed = new React.createClass({
 			var find = {"_id": userId, "inbox._id": feedData._id};
 			var update = {$set: {"inbox.$.seen": true}};
 			// Meteor.call("updateUserElement",find, update);
-			// Meteor.users.update(,
+			// WI.update(,
 			// 	)
-			// Meteor.users.findOne({"_id": userId});
+			// WI.findOne({"_id": userId});
 		// },1000);
 	}
 });
