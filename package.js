@@ -18,6 +18,7 @@ Package.on_use(function (api) {
     'tracker',
     'session',
     'pedrohenriquerls:reactjs',
+    'youiest:recommend',
     ], ['client', 'server']);
   api.add_files([
     'lib.js'
